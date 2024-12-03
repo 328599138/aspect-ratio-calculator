@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>宽高比转换器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        input {
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>宽高比转换器</h2>
+        
+        <div class="input-group">
+            <label>宽:</label>
+            <input type="number" id="width" value="1">
+            <label>高:</label>
+            <input type="number" id="height" value="1">
+            <button onclick="calculate()">计算像素值</button>
+        </div>
+
+        <div class="input-group">
+            <label>宽度像素:</label>
+            <input type="text" id="pixelWidth" readonly>
+            <button onclick="copyToClipboard('pixelWidth')">复制</button>
+        </div>
+        
+        <div class="input-group">
+            <label>高度像素:</label>
+            <input type="text" id="pixelHeight" readonly>
+            <button onclick="copyToClipboard('pixelHeight')">复制</button>
+        </div>
+
+        <div class="input-group">
+            <label>调整像素值大小:</label>
+            <input type="range" id="sizeSlider" min="640" max="3840" value="1024">
+            <span id="sliderValue">1024px</span>
+        </div>
+
+        <div class="input-group">
+            <button onclick="setPreset(640)">标清</button>
+            <button onclick="setPreset(1280)">高清</button>
+            <button onclick="setPreset(1920)">全高清</button>
+            <button onclick="setPreset(2560)">2K</button>
+            <button onclick="setPreset(3840)">4K</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px; color: #666;">
+            @大峰AI绘画 联系方式：微信/QQ：934026
+        </div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('sizeSlider');
+        const sliderValue = document.getElementById('sliderValue');
+        
+        slider.oninput = function() {
+            sliderValue.textContent = this.value + 'px';
+            calculate();
+        }
+
+        function calculate() {
+            const width = parseFloat(document.getElementById('width').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const targetWidth = parseInt(slider.value);
+
+            if (width && height) {
+                let pixelWidth = targetWidth;
+                let pixelHeight = Math.round(targetWidth * (height/width));
+
+                document.getElementById('pixelWidth').value = pixelWidth;
+                document.getElementById('pixelHeight').value = pixelHeight;
+            }
+        }
+
+        function setPreset(value) {
+            slider.value = value;
+            sliderValue.textContent = value + 'px';
+            calculate();
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            const originalValue = element.value;
+            element.value = '已复制!';
+            setTimeout(() => {
+                element.value = originalValue;
+            }, 1000);
+        }
+
+        calculate();
+    </script>
+</body>
+</html>
